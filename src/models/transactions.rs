@@ -2194,6 +2194,41 @@ pub struct Payment<'a> {
     deliver_min: Option<Currency>,
 }
 
+impl<'a> Payment<'a> {
+    /// Create a new Payment transaction
+    pub fn new(account: &'a str, destination: &'a str, amount: &'a str) -> Self {
+        Self {
+            transaction_type: TransactionType::Payment,
+            account,
+            amount: Currency::Xrp {
+                value: Some(amount.to_string().into()),
+                currency: "XRP".into(),
+            },
+            destination,
+            fee: None,
+            sequence: None,
+            last_ledger_sequence: None,
+            account_txn_id: None,
+            signing_pub_key: None,
+            source_tag: None,
+            ticket_sequence: None,
+            txn_signature: None,
+            flags: None,
+            memos: None,
+            signers: None,
+            destination_tag: None,
+            invoice_id: None,
+            paths: None,
+            send_max: None,
+            deliver_min: None,
+        }
+    }
+    /// Add a signature to the transaction
+    pub fn add_signature(&mut self, signature: &'a str) {
+        self.txn_signature = Some(signature);
+    }
+}
+
 impl Model for Payment<'static> {
     fn to_json_value(&self) -> Value {
         let mut transaction_json =
